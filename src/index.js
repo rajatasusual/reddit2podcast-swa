@@ -1,21 +1,24 @@
 window.addEventListener('load', async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const episode = urlParams.get('episode');
-  if (!episode) return;
 
-  const principal = request.headers.get('x-ms-client-principal');
-  if (!principal) {
-    return {
-      status: 401,
-      body: 'Unauthorized'
-    };
+  async function getUserInfo() {
+    const response = await fetch('/.auth/me');
+    const payload = await response.json();
+    const { clientPrincipal } = payload;
+    return clientPrincipal;
   }
-  const response = await fetch(`https://reddit2podcast.azurewebsites.net/api/episodes?episode=${episode}`, {
+
+  const userInfo = await getUserInfo();
+
+  const response = await fetch(`https://reddit2podcast.azurewebsites.net/api/episodes${episode ? `?episode=${episode}` : ''}`, {
+    body: JSON.stringify(userInfo),
+    method: 'POST',
     headers: {
-      'x-ms-client-principal': principal
+      'Content-Type': 'application/json'
     }
   });
-  const {episodes, sasToken} = await response.json();
+  const { episodes, sasToken } = await response.json();
 
   document.body.innerHTML = `
     <h1>🎙️ Reddit2Podcast Episodes</h1>
