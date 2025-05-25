@@ -22,7 +22,6 @@ window.addEventListener('load', async () => {
 
   document.body.innerHTML = `
     <h1>🎙️ Reddit2Podcast Episodes</h1>
-    <h2>Episode - ${episodes[0].date}</h1>
     ${episodes.map(ep => `
       <div class="episode-card">
         <h2>Episode – ${ep.date}</h2>
