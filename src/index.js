@@ -11,11 +11,14 @@ window.addEventListener('load', async () => {
 
   const userInfo = await getUserInfo();
 
+  require("dotenv").config()
+
   const response = await fetch(`https://reddit2podcast.azurewebsites.net/api/episodes${episode ? `?episode=${episode}` : ''}`, {
     body: JSON.stringify(userInfo),
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-functions-key': process.env.EPISODES_KEY
     }
   });
   const { episodes, sasToken } = await response.json();
