@@ -20,8 +20,16 @@ window.addEventListener('load', async () => {
   });
   const { episodes, sasToken } = await response.json();
 
-  document.body.innerHTML = `
+  const firstEpisode = episodes[0];
+  if (!firstEpisode) {
+    document.body.innerText = 'No episodes found.';
+  } else {
+    const epsiodeUrl = new URL(firstEpisode.audioUrl);
+    const rssUrl = epsiodeUrl.protocol + '//' + epsiodeUrl.host + epsiodeUrl.pathname.split('/').slice(0, 2).join('/') + '/rss/feed.xml?' + sasToken;
+
+    document.body.innerHTML = `
     <h1>🎙️ Reddit2Podcast Episodes</h1>
+    <p><a href="${rssUrl}" target="_blank">RSS Feed</a></p>
     ${episodes.map(ep => `
       <div class="episode-card">
         <h2>Episode – ${ep.date}</h2>
@@ -33,4 +41,5 @@ window.addEventListener('load', async () => {
       </div>
     `).join('')}
   `;
+  }
 });
