@@ -1,3 +1,6 @@
+const STORAGEURL = 'https://reddit2podcast.blob.core.windows.net';
+const FUNCTIONURL = 'https://reddit2podcast.azurewebsites.net';
+
 window.addEventListener('load', async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const episode = urlParams.get('episode');
@@ -11,7 +14,7 @@ window.addEventListener('load', async () => {
 
   const userInfo = await getUserInfo();
 
-  const response = await fetch(`https://reddit2podcast.azurewebsites.net/api/episodes${episode ? `?episode=${episode}` : ''}`, {
+  const response = await fetch(`${FUNCTIONURL}/api/episodes${episode ? `?episode=${episode}` : ''}`, {
     body: JSON.stringify(userInfo),
     method: 'POST',
     headers: {
@@ -24,8 +27,8 @@ window.addEventListener('load', async () => {
   if (!firstEpisode) {
     document.body.innerText = 'No episodes found.';
   } else {
-    const epsiodeUrl = new URL(firstEpisode.audioUrl);
-    const rssUrl = epsiodeUrl.protocol + '//' + epsiodeUrl.host + epsiodeUrl.pathname.split('/').slice(0, 2).join('/') + '/rss/feed.xml?' + sasToken;
+ 
+    const rssUrl = `${STORAGEURL}/reddit2podcast-public/rss/feed.xml`
 
     document.body.innerHTML = `
     <h1>🎙️ Reddit2Podcast Episodes</h1>
