@@ -189,14 +189,22 @@ window.addEventListener('load', async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const episode = urlParams.get('episode');
 
-  const userInfo = await (await fetch('/.auth/me')).json().then(r => r.clientPrincipal);
+  async function getUserInfo() {
+    const response = await fetch('/.auth/me');
+    const payload = await response.json();
+    const { clientPrincipal } = payload;
+    return clientPrincipal;
+  }
+
+  const userInfo = await getUserInfo();
 
   const response = await fetch(`${FUNCTIONURL}/api/episodes${episode ? `?episode=${episode}` : ''}`, {
+    body: JSON.stringify(userInfo),
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(userInfo)
+    headers: {
+      'Content-Type': 'application/json'
+    }
   });
-
   const { episodes, sasToken } = await response.json();
 
   if (!episodes || !episodes.length) {
