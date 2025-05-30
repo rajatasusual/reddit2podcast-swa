@@ -2,14 +2,13 @@ const STORAGEURL = 'https://reddit2podcast.blob.core.windows.net';
 const FUNCTIONURL = 'https://reddit2podcast.azurewebsites.net';
 
 class CustomAudioPlayer {
-  static instances = [];
+  static current = null;
 
   constructor(container, audioUrl, sasToken) {
     this.container = container;
     this.audioUrl = audioUrl;
     this.sasToken = sasToken;
     this.audio = null;
-    CustomAudioPlayer.instances.push(this);
     this.build();
   }
 
@@ -45,14 +44,14 @@ class CustomAudioPlayer {
   }
 
   togglePlay() {
-    if (!this.audio.paused) {
-      this.audio.pause();
-    } else {
-      // pause all others
-      CustomAudioPlayer.instances.forEach(inst => {
-        if (inst !== this) inst.audio.pause();
-      });
+    if (this.audio.paused) {
+      if (CustomAudioPlayer.current)
+        CustomAudioPlayer.current.togglePlay();
       this.audio.play();
+      CustomAudioPlayer.current = this;
+    } else {
+      this.audio.pause();
+      CustomAudioPlayer.current = null;
     }
     this.playBtn.classList.toggle('paused', !this.audio.paused);
   }
