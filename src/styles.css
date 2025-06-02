@@ -106,3 +106,18 @@ hr {
 	color: #555;
 	margin-top: 0;
 }
+
+.transcript {
+  margin-top: 10px;
+  background: #f9f9f9;
+  padding: 10px;
+  border-left: 4px solid #ccc;
+  white-space: normal;
+  line-height: 1.6;
+}
+.sentence {
+  cursor: pointer;
+}
+.sentence:hover {
+  background: #eef;
+}
