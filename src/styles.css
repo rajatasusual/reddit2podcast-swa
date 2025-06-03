@@ -1,37 +1,70 @@
+:root {
+	--primary-color: #B098A4;
+	--secondary-color: #df7164;
+	--text-color: #747572;
+	--emphasis-text-color: #45503B;
+	--background-color: #E5EBEA;
+	--border-color: #DBD9DB;
+}
+
+@viewport {
+	width: device-width;
+	zoom: 1;
+}
+
+html {
+	font-size: 14px;
+}
+
 body {
-	font-family: Arial, sans-serif;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	margin: 0;
 	padding: 1rem;
-	background: #E5EBEA;
+	background: var(--background-color);
+	line-height: 1.6;
 }
+
 header {
 	text-align: center;
 	margin-bottom: 1rem;
 }
+
+/* Responsive Typography */
 h1 {
 	font-size: 2rem;
-	color: #B098A4;
+	color: var(--primary-color);
+	margin-bottom: 0.5rem;
 }
+
+h2 {
+	font-size: 1.25rem;
+}
+
 a {
 	color: #747572;
 	text-decoration: underline;
 }
+
 a:hover {
 	color: #45503B;
 }
+
 a:visited {
 	color: #45503B;
 }
+
 p {
 	font-size: 1rem;
 	color: #747572;
 }
+
 hr {
 	border: none;
 	border-top: 1px solid #DBD9DB;
 	margin: 1rem 0;
 }
 
+/* Episode Cards */
 .episode-card {
 	padding: 1rem;
 	margin-bottom: 1rem;
@@ -49,56 +82,65 @@ hr {
 	margin-bottom: 0.75rem;
 }
 
+/* Player Controls */
 .player-controls {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	margin-bottom: 0.5rem;
+	margin: 1rem 0;
+	flex-wrap: wrap;
 }
 
 .play-pause-btn {
-  border: 0;
-  background: transparent;
-  box-sizing: border-box;
-  width: 0;
-  height: 74px;
-  border-color: transparent transparent transparent #B098A4;
-  transition: 100ms all ease;
-  cursor: pointer;
-  border-style: solid;
-  border-width: 37px 0 37px 60px;
+	border: 0;
+	background: transparent;
+	box-sizing: border-box;
+	width: 0;
+	height: 74px;
+	border-color: transparent transparent transparent #B098A4;
+	transition: 100ms all ease;
+	cursor: pointer;
+	border-style: solid;
+	border-width: 37px 0 37px 60px;
 }
+
 .play-pause-btn.paused {
-  border-style: double;
-  border-width: 0px 0 0px 60px;
+	border-style: double;
+	border-width: 0px 0 0px 60px;
 }
+
 .play-pause-btn:hover {
-  border-color: transparent transparent transparent #df7164;
+	border-color: transparent transparent transparent #df7164;
 }
 
 .player-controls .time {
 	font-size: 0.75rem;
-	color: #444;
+	color: var(--text-color);
 	width: 40px;
 	text-align: center;
 }
 
+/* Seek Bar */
 .seek {
 	flex: 1;
-	-webkit-appearance: none;
+	min-width: 150px;
 	height: 6px;
-	border-radius: 3px;
+	-webkit-appearance: none;
 	background: #e0e0e0;
-	cursor: pointer;
+	border-radius: 3px;
 }
 
 .seek::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	width: 14px;
-	height: 14px;
+	width: 18px;
+	height: 18px;
+	background: var(--secondary-color);
 	border-radius: 50%;
-	background: #df7164;
-	cursor: pointer;
+	transition: transform 0.2s;
+}
+
+.seek::-webkit-slider-thumb:active {
+	transform: scale(1.2);
 }
 
 .summary {
@@ -107,56 +149,117 @@ hr {
 	margin-top: 0;
 }
 
+/* Transcript Styles */
 .transcript {
-  margin-top: 1rem;
-  background: transparent;
-  padding: 0.75rem 1rem;
-  border-left: 4px solid #B098A4;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  white-space: normal;
-  line-height: 1.6;
-  font-size: 0.75rem;
-  color: #555;
+	margin-top: 1rem;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	padding: 0.75rem 1rem;
+	border-left: 4px solid #B098A4;
+	border-radius: 6px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	white-space: normal;
+	color: var(--text-color);
 }
 
 .transcript {
-  display: none;
+	display: none;
 }
+
 .transcript.visible {
-  display: block ! important;
+	display: block ! important;
 }
 
 .transcript-toggle {
-  background-color: transparent;
-  border: 1px solid #B098A4;
-  color: #555;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.85rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 0.5rem;
+	background-color: transparent;
+	border: 1px solid #B098A4;
+	color: #555;
+	padding: 0.4rem 0.75rem;
+	font-size: 0.85rem;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	margin-top: 0.5rem;
 }
 
 .transcript-toggle:hover {
-  background-color: #B098A4;
-  color: #fff;
+	background-color: #B098A4;
+	color: #fff;
 }
 
-
 .sentence {
-  cursor: pointer;
-  transition: background 0.1s ease;
+	cursor: pointer;
+	color: var(--emphasis-text-color);
+	transition: background 0.1s ease;
 }
 
 .sentence:hover {
-  background: #E5EBEA;
+	background: var(--text-color);
+	color: #fff;
+	padding: 0 2px;
 }
 
 .sentence.active {
-  background-color: #df7164;
-  color: #fff;
-  border-radius: 4px;
-  padding: 0 2px;
+	background-color: #df7164;
+	color: #fff;
+	padding: 0 2px;
+}
+
+/* Media Queries for Larger Screens */
+@media (min-width: 576px) {
+	html {
+		font-size: 16px;
+	}
+
+	.episode-card {
+		padding: 1.5rem;
+		margin-bottom: 1.5rem;
+	}
+}
+
+@media (min-width: 768px) {
+	body {
+		padding: 2rem;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.player-controls {
+		gap: 1rem;
+		flex-wrap: nowrap;
+	}
+
+	.seek {
+		height: 8px;
+	}
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition-duration: 0s !important;
+	}
+}
+
+/* Touch Target Sizing */
+button,
+a,
+[role="button"] {
+	min-height: 24px;
+	min-width: 24px;
+}
+
+/* Mobile-Specific Adjustments */
+@media (max-width: 575px) {
+	.episode-card {
+		margin-left: -1rem;
+		margin-right: -1rem;
+		border-radius: 0;
+	}
+
+	.transcript-toggle {
+		width: 100%;
+		padding: 0.75rem;
+		font-size: 1rem;
+	}
 }
