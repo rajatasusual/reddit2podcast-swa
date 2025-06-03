@@ -108,16 +108,55 @@ hr {
 }
 
 .transcript {
-  margin-top: 10px;
-  background: #f9f9f9;
-  padding: 10px;
-  border-left: 4px solid #ccc;
+  margin-top: 1rem;
+  background: transparent;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #B098A4;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   white-space: normal;
   line-height: 1.6;
+  font-size: 0.75rem;
+  color: #555;
 }
+
+.transcript {
+  display: none;
+}
+.transcript.visible {
+  display: block ! important;
+}
+
+.transcript-toggle {
+  background-color: transparent;
+  border: 1px solid #B098A4;
+  color: #555;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.transcript-toggle:hover {
+  background-color: #B098A4;
+  color: #fff;
+}
+
+
 .sentence {
   cursor: pointer;
+  transition: background 0.1s ease;
 }
+
 .sentence:hover {
-  background: #eef;
+  background: #E5EBEA;
+}
+
+.sentence.active {
+  background-color: #df7164;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0 2px;
 }

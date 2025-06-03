@@ -9,6 +9,9 @@ class CustomAudioPlayer {
     this.audioUrl = audioUrl;
     this.sasToken = sasToken;
     this.audio = null;
+    this.transcript = null;
+    this.transcriptDiv = null;
+
     this.build();
   }
 
@@ -43,6 +46,11 @@ class CustomAudioPlayer {
     this.audio.addEventListener('ended', () => this.onEnded());
   }
 
+  setTranscript(transcript, transcriptDiv) {
+    this.transcript = transcript;
+    this.transcriptDiv = transcriptDiv;
+  }
+
   togglePlay() {
     if (this.audio.paused) {
       if (CustomAudioPlayer.current)
@@ -64,6 +72,23 @@ class CustomAudioPlayer {
   updateProgress() {
     this.seek.value = this.audio.currentTime;
     this.startTime.textContent = this.formatTime(this.audio.currentTime);
+
+    if (this.transcript && this.transcriptDiv) {
+      const currentTime = this.audio.currentTime;
+      for (let i = 0; i < this.transcript.length; i++) {
+        const entry = this.transcript[i];
+        const start = entry.audioOffset / 10000000;
+        const end = start + (entry.duration || 0) / 10000000;
+        const span = this.transcriptDiv.children[i];
+        if (!span) continue;
+        if (currentTime >= start && currentTime <= end) {
+          span.classList.add('active');
+        } else {
+          span.classList.remove('active');
+        }
+      }
+    }
+
   }
 
   onSeek() {
@@ -72,7 +97,7 @@ class CustomAudioPlayer {
   }
 
   onEnded() {
-    this.playBtn.classList.remove('pause');
+    this.playBtn.classList.remove('paused');
   }
 
   formatTime(sec) {
@@ -82,7 +107,7 @@ class CustomAudioPlayer {
   }
 }
 
-function renderTranscript(transcript, transcriptDiv, audio) {
+function renderTranscript(transcript, transcriptDiv, audio, player) {
   transcriptDiv.innerHTML = '';
   transcript.forEach((entry, index) => {
     const span = document.createElement('span');
@@ -92,10 +117,15 @@ function renderTranscript(transcript, transcriptDiv, audio) {
     span.dataset.index = index;
     span.onclick = () => {
       audio.currentTime = parseFloat(span.dataset.time);
-      audio.play();
+      if (!audio.paused)
+        audio.play();
     };
     transcriptDiv.appendChild(span);
   });
+
+  if (player && typeof player.setTranscript === 'function') {
+    player.setTranscript(transcript, transcriptDiv);
+  }
 }
 
 window.addEventListener('load', async () => {
@@ -130,36 +160,37 @@ window.addEventListener('load', async () => {
       <p class="summary">${ep.summary}</p>
     </div>
     ${ep.transcriptsUrl ? `
-      <button class="transcript-toggle" data-index="${i}" data-sas="${sasToken}">Show Transcript</button>
+      <button class="transcript-toggle" 
+        data-index="${i}"
+        data-transcript-url="${ep.transcriptsUrl}">
+        Show Transcript</button>
       <div class="transcript" id="transcript-${i}" style="display: none;"></div>
     ` : ''}
   </div>
 `).join('');
 
-  document.querySelectorAll('.audio-player-container').forEach(el => {
-    new CustomAudioPlayer(
-      el,
-      el.getAttribute('data-audio-url'),
-      el.getAttribute('data-sas')
-    );
+  document.querySelectorAll('.audio-player-container').forEach(async el => {
+    const audioUrl = el.getAttribute('data-audio-url');
+    const player = new CustomAudioPlayer(el, audioUrl, sasToken);
+    el._player = player;
+
   });
 
   document.querySelectorAll('.transcript-toggle').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const index = btn.dataset.index;
-      const sasToken = btn.dataset.sas;
+      const index = btn.getAttribute('data-index');
+      const transcriptUrl = btn.getAttribute('data-transcript-url');
+      const resp = await fetch(transcriptUrl + '?' + sasToken);
+      const transcriptJson = await resp.json();
       const transcriptDiv = document.getElementById(`transcript-${index}`);
-      const ep = episodes[index];
 
-      if (transcriptDiv.innerHTML === '') {
-        const res = await fetch(ep.transcriptsUrl + '?' + sasToken);
-        const transcriptJson = await res.json();
-        renderTranscript(transcriptJson, transcriptDiv, document.querySelectorAll('.audio-player-container')[index].querySelector('audio'));
-      }
+      const audioContainer = document.querySelectorAll('.audio-player-container')[index];
+      const player = audioContainer._player;
+      renderTranscript(transcriptJson, transcriptDiv, player.audio, player);
 
-      const isVisible = transcriptDiv.style.display === 'block';
-      transcriptDiv.style.display = isVisible ? 'none' : 'block';
-      btn.textContent = isVisible ? 'Show Transcript' : 'Hide Transcript';
+      transcriptDiv.classList.toggle('visible');
+      btn.textContent = transcriptDiv.classList.contains('visible') ? 'Hide Transcript' : 'Show Transcript';
+
     });
   });
 
