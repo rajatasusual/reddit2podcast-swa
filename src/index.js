@@ -44,6 +44,19 @@ class CustomAudioPlayer {
     this.audio.addEventListener('loadedmetadata', () => this.setupSeek());
     this.seek.addEventListener('input', () => this.onSeek());
     this.audio.addEventListener('ended', () => this.onEnded());
+
+    this.audio.addEventListener('pause', () => {
+      this.playBtn.classList.remove('paused');
+      if (CustomAudioPlayer.current === this) {
+        CustomAudioPlayer.current = null;
+      }
+    });
+
+    this.audio.addEventListener('play', () => {
+      this.playBtn.classList.add('paused');
+      CustomAudioPlayer.current = this;
+    });
+
   }
 
   setTranscript(transcript, transcriptDiv) {
