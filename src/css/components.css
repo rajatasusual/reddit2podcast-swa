@@ -1,0 +1,93 @@
+@import url('./variables.css');
+
+/* Episode Card */
+.episode-card {
+  scroll-snap-align: start;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.episode-card h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+  color: var(--primary-color);
+}
+
+.episode-card .meta {
+  font-size: 0.875rem;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+}
+
+/* Player Controls */
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.play-pause-btn {
+  border: 0;
+  background: transparent;
+  box-sizing: border-box;
+  width: 0;
+  height: 74px;
+  border-color: transparent transparent transparent var(--primary-color);
+  transition: 100ms all ease;
+  cursor: pointer;
+  border-style: solid;
+  border-width: 37px 0 37px 60px;
+}
+
+.play-pause-btn.paused {
+  border-style: double;
+  border-width: 0px 0 0px 60px;
+}
+
+.play-pause-btn:hover,
+.play-pause-btn:focus {
+  border-color: transparent transparent transparent var(--secondary-color);
+  outline: none;
+}
+
+.player-controls .time {
+  font-size: 0.75rem;
+  color: var(--text-color);
+  width: 40px;
+  text-align: center;
+}
+
+/* Seek Bar */
+.seek {
+  flex: 1;
+  min-width: 150px;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--secondary-color);
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.seek::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+}
+
+/* Summary */
+.summary {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  margin-top: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+}

@@ -1,0 +1,17 @@
+/* Focus states for accessibility */
+a:focus,
+button:focus,
+.transcript-toggle:focus,
+.play-pause-btn:focus,
+.sentence:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+/* Touch Target Sizing */
+button,
+a,
+[role="button"] {
+  min-height: 24px;
+  min-width: 24px;
+}

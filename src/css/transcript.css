@@ -1,0 +1,72 @@
+@import url('./variables.css');
+
+/* Transcript Styles */
+.transcript {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid var(--primary-color);
+  border-radius: 6px;
+  background: var(--background-color);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  white-space: normal;
+  color: var(--text-color);
+  max-height: calc(100vh - 320px); 
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: max-height 0.3s, opacity 0.3s, visibility 0.3s;
+  opacity: 0;
+  visibility: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.transcript::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.transcript.visible {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+}
+
+.transcript-toggle {
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 0.4rem 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  display: inline-block;
+}
+
+.transcript-toggle:hover,
+.transcript-toggle:focus {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  outline: none;
+}
+
+.sentence {
+  cursor: pointer;
+  color: var(--emphasis-text-color);
+  transition: background 0.1s;
+}
+
+.sentence:hover {
+  background: var(--text-color);
+  color: var(--background-color);
+  padding: 0 2px;
+}
+
+.sentence.active {
+  background-color: var(--secondary-color);
+  color: var(--background-color);
+  padding: 0 2px;
+}

@@ -1,0 +1,47 @@
+@import url('./variables.css');
+
+/* Media Queries for Larger Screens */
+@media (min-width: 576px) {
+  html {
+    font-size: 16px;
+  }
+  .episode-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .player-controls {
+    gap: 1rem;
+    flex-wrap: nowrap;
+  }
+  .seek {
+    height: 8px;
+  }
+}
+
+/* Mobile-Specific Adjustments */
+@media (max-width: 575px) {
+  .episode-card {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+  }
+  .transcript-toggle {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0s !important;
+  }
+}

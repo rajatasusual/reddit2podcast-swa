@@ -1,0 +1,33 @@
+@import url('./variables.css');
+
+/* Layout and container styles */
+.episodes-container {
+  scroll-snap-type: y proximity;
+}
+
+.episode-wrapper {
+  padding: 1rem;
+  scroll-snap-align: start;
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.current-episode {
+  background: var(--highlight-color);
+  backdrop-filter: blur(5px);
+  border: 1px solid var(--border-color);
+  box-shadow: 1px 1px 5px var(--shadow-color);
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.current-episode.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.current-episode.sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  z-index: 1000;
+}
