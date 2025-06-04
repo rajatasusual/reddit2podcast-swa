@@ -1,16 +1,19 @@
 import { CONFIG } from './config.js';
 import { ApiService } from './api-service.js';
 import { AudioPlayer } from './audio-player.js';
-import { TranscriptRenderer } from './transcript-renderer.js';
 import { EpisodeRenderer } from './episode-renderer.js';
+import { StickyManager } from './sticky-manager.js';
+import { TranscriptManager } from './transcript-manager.js';
+import { ErrorDisplay } from './error-display.js';
 
-class App {
+export class App {
   constructor() {
     this.episodes = [];
     this.sasToken = '';
     this.players = new Map();
     this.currentEpisode = null;
-    this.ticking = false;
+    this.stickyManager = new StickyManager(this);
+    this.transcriptManager = new TranscriptManager(this);
   }
 
   async init() {
@@ -19,10 +22,10 @@ class App {
       this.setRSSLink();
       this.renderEpisodes();
       this.initAudioPlayers();
-      this.initTranscriptToggles();
-      window.addEventListener('scroll', this.throttledStickyHandler.bind(this));
+      this.transcriptManager.initTranscriptToggles();
+      window.addEventListener('scroll', this.stickyManager.throttledStickyHandler);
     } catch (error) {
-      this.displayError(error);
+      ErrorDisplay.displayError(error);
     }
   }
 
@@ -76,89 +79,13 @@ class App {
     this.toggleSummary(episodeWrapper, false);
     this.currentEpisode = episodeWrapper;
     episodeWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    this.transcriptManager.bodyScrollHandler();
   }
 
   toggleSummary(wrapper, show) {
     const summary = wrapper.querySelector('.summary');
     if (summary) summary.style.display = show ? 'block' : 'none';
-  }
-
-  throttledStickyHandler() {
-    if (!this.ticking) {
-      window.requestAnimationFrame(() => {
-        this.updateStickyPosition();
-        this.ticking = false;
-      });
-      this.ticking = true;
-    }
-  }
-
-  updateStickyPosition() {
-        if (!this.currentEpisode) return;
-
-    const rect = this.currentEpisode.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const scrollTop = window.scrollY;
-    const scrollBottom = scrollTop + viewportHeight;
-    const pageHeight = document.documentElement.scrollHeight;
-
-    const alreadyTop = this.currentEpisode.classList.contains('sticky-top');
-    const alreadyBottom = this.currentEpisode.classList.contains('sticky-bottom');
-
-    // Case: Scrolled past — stick to top
-    if (rect.top <= 0 && scrollBottom < pageHeight - 1) {
-      if (!alreadyTop) {
-        this.currentEpisode.classList.remove('sticky-bottom');
-        this.currentEpisode.classList.add('sticky-top');
-      }
-    }
-    // Case: Before it's in view — stick to bottom
-    else if (rect.bottom >= viewportHeight && scrollTop > 0) {
-      if (!alreadyBottom) {
-        this.currentEpisode.classList.remove('sticky-top');
-        this.currentEpisode.classList.add('sticky-bottom');
-      }
-    }
-  }
-
-  initTranscriptToggles() {
-    document.querySelectorAll('.transcript-toggle').forEach(btn =>
-      btn.addEventListener('click', () => this.handleTranscriptToggle(btn))
-    );
-  }
-
-  async handleTranscriptToggle(button) {
-    try {
-      const index = Number(button.dataset.index);
-
-      const currentEpisodeIndex = this.currentEpisode?.querySelector('.transcript-toggle')?.dataset.index;
-      const isCurrent = currentEpisodeIndex && index === Number(currentEpisodeIndex);
-      const transcriptUrl = button.dataset.transcriptUrl;
-      const transcriptDiv = document.getElementById(`transcript-${index}`);
-      const player = this.players.get(index);
-
-      if (!transcriptDiv.hasChildNodes()) {
-        const data = await ApiService.fetchTranscript(transcriptUrl, this.sasToken);
-        const renderer = new TranscriptRenderer(transcriptDiv, player);
-        renderer.render(data);
-        player.setTranscriptRenderer(renderer);
-      }
-
-      const isVisible = player.transcriptRenderer.toggle();
-      button.textContent = isVisible ? 'Hide Transcript' : 'Show Transcript';
-      document.body.style.overflow = isCurrent && isVisible ? 'hidden' : 'auto';
-    } catch (error) {
-      console.error('Error loading transcript:', error);
-      button.textContent = 'Error loading transcript';
-    }
-  }
-
-  displayError(error) {
-    console.error('Application error:', error);
-    const container = document.getElementById('episodes');
-    if (container) {
-      container.textContent = 'An error occurred while loading episodes. Please try again later.';
-    }
   }
 }
 
