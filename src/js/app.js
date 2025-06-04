@@ -80,7 +80,8 @@ class App {
     episodeWrapper.querySelector('.summary').style.display = 'none';
     this.currentEpisode = episodeWrapper;
 
-    this.handleStickyPosition();
+    // scroll the episode to the top
+    episodeWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   handleStickyPositionThrottled() {
@@ -148,10 +149,7 @@ class App {
       const transcriptRenderer = player.transcriptRenderer;
       const isVisible = transcriptRenderer.toggle();
       button.textContent = isVisible ? 'Hide Transcript' : 'Show Transcript';
-      if (isVisible) {
-        transcriptDiv.scrollTop = 0;
-        transcriptDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+      document.body.style.overflow = isVisible ? 'hidden' : 'auto';
     } catch (error) {
       console.error('Error loading transcript:', error);
       button.textContent = 'Error loading transcript';

@@ -69,11 +69,10 @@ p {
 
 .current-episode {
 	background: var(--highlight-color);
-	box-shadow: 0 -2px 10px rgba(var(--secondary-color), 0.2);
 	backdrop-filter: blur(5px);
-	transition: transform 0.3s ease;
 	border: 1px solid var(--border-color);
-	box-shadow: 1px 1px 5px rgba(var(--shadow-color), 0.2);
+	box-shadow: 1px 1px 5px var(--shadow-color);
+	transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .current-episode.sticky-top {
@@ -172,39 +171,40 @@ p {
 	font-size: 0.9rem;
 	color: var(--text-color);
 	margin-top: 0;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Transcript Styles */
 .transcript {
-	display: none;
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  padding: 0.75rem 1rem;
-  border-left: 2px solid var(--primary-color);
-  border-radius: 6px;
-  background: var(--background-color); /* optional for clarity */
-  box-shadow: 0 2px 4px rgba(var(--highlight-color), 0.05);
-  white-space: normal;
-  color: var(--text-color);
-  display: none;
+	margin-top: 0.75rem;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	padding: 0.75rem 1rem;
+	border-left: 2px solid var(--primary-color);
+	border-radius: 6px;
+	background: var(--background-color);
+	box-shadow: 0 2px 4px var(--shadow-color);
+	white-space: normal;
+	color: var(--text-color);
 	max-height: calc(100vh - 320px); 
-  overflow-y: auto;
-  overscroll-behavior: contain;
-	transition: all 0.3s ease-in-out;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+	opacity: 0;
+	visibility: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
 
 .transcript::-webkit-scrollbar {
   width: 0px;
   background: transparent;
 }
-.transcript {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-}
 
 .transcript.visible {
-  display: block !important;
+	display: block !important;
+	opacity: 1;
+	visibility: visible;
 }
 
 .transcript-toggle {
@@ -221,8 +221,8 @@ p {
 }
 
 .transcript-toggle:hover {
-  background-color: var(--primary-color);
-  color: var(--background-color);
+	background-color: var(--primary-color);
+	color: var(--background-color);
 }
 
 
@@ -242,6 +242,15 @@ p {
 	background-color: var(--secondary-color);
 	color: var(--background-color);
 	padding: 0 2px;
+}
+
+a,
+.episode-wrapper,
+.episode-card,
+.play-pause-btn,
+.transcript-toggle,
+.sentence {
+	transition: all 0.3s ease;
 }
 
 /* Media Queries for Larger Screens */

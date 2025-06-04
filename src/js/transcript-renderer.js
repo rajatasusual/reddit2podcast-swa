@@ -50,8 +50,12 @@ export class TranscriptRenderer {
     });
   }
 
+  isVisible() {
+    return this.transcriptDiv.classList.contains('visible');
+  }
+
   toggle() {
     this.transcriptDiv.classList.toggle('visible');
-    return this.transcriptDiv.classList.contains('visible');
+    return this.isVisible();
   }
 }
