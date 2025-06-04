@@ -16,27 +16,25 @@ class App {
   async init() {
     try {
       await this.loadEpisodes();
-      this.setupRSSLink();
+      this.setRSSLink();
       this.renderEpisodes();
-      this.setupAudioPlayers();
-      this.setupTranscriptToggles();
-
-      window.addEventListener('scroll', this.handleStickyPositionThrottled.bind(this));
+      this.initAudioPlayers();
+      this.initTranscriptToggles();
+      window.addEventListener('scroll', this.throttledStickyHandler.bind(this));
     } catch (error) {
-      this.handleError(error);
+      this.displayError(error);
     }
   }
 
   async loadEpisodes() {
     const urlParams = new URLSearchParams(window.location.search);
     const episode = urlParams.get('episode');
-
-    const { episodes, sasToken } = await ApiService.fetchEpisodes(episode);
-    this.episodes = episodes || [];
+    const { episodes = [], sasToken } = await ApiService.fetchEpisodes(episode);
+    this.episodes = episodes;
     this.sasToken = sasToken;
   }
 
-  setupRSSLink() {
+  setRSSLink() {
     const rssLink = document.getElementById('rss-link');
     if (rssLink) {
       rssLink.href = `${CONFIG.STORAGE_URL}${CONFIG.RSS_FEED_PATH}`;
@@ -45,24 +43,20 @@ class App {
 
   renderEpisodes() {
     const container = document.getElementById('episodes');
+    if (!container) return;
 
-    if (!this.episodes.length) {
-      container.textContent = 'No episodes found.';
-      return;
-    }
-
-    container.innerHTML = EpisodeRenderer.renderEpisodes(this.episodes, this.sasToken);
+    container.innerHTML = this.episodes.length
+      ? EpisodeRenderer.renderEpisodes(this.episodes, this.sasToken)
+      : 'No episodes found.';
   }
 
-  setupAudioPlayers() {
-    const playerContainers = document.querySelectorAll('.audio-player-container');
-
-    playerContainers.forEach((container, index) => {
-      const audioUrl = container.getAttribute('data-audio-url');
+  initAudioPlayers() {
+    document.querySelectorAll('.audio-player-container').forEach((container, index) => {
+      const audioUrl = container.dataset.audioUrl;
       const player = new AudioPlayer(container, audioUrl, this.sasToken);
 
       player.audio.addEventListener('play', () => {
-        this.setCurrentEpisode(container.closest('.episode-wrapper'));
+        this.highlightEpisode(container.closest('.episode-wrapper'));
       });
 
       this.players.set(index, player);
@@ -70,32 +64,37 @@ class App {
     });
   }
 
-  setCurrentEpisode(episodeWrapper) {
+  highlightEpisode(episodeWrapper) {
+    if (!episodeWrapper) return;
+
     if (this.currentEpisode) {
       this.currentEpisode.classList.remove('current-episode');
-      this.currentEpisode.querySelector('.summary').style.display = 'block';
+      this.toggleSummary(this.currentEpisode, true);
     }
 
     episodeWrapper.classList.add('current-episode');
-    episodeWrapper.querySelector('.summary').style.display = 'none';
+    this.toggleSummary(episodeWrapper, false);
     this.currentEpisode = episodeWrapper;
-
-    // scroll the episode to the top
     episodeWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  handleStickyPositionThrottled() {
+  toggleSummary(wrapper, show) {
+    const summary = wrapper.querySelector('.summary');
+    if (summary) summary.style.display = show ? 'block' : 'none';
+  }
+
+  throttledStickyHandler() {
     if (!this.ticking) {
       window.requestAnimationFrame(() => {
-        this.handleStickyPosition();
+        this.updateStickyPosition();
         this.ticking = false;
       });
       this.ticking = true;
     }
   }
 
-  handleStickyPosition() {
-    if (!this.currentEpisode) return;
+  updateStickyPosition() {
+        if (!this.currentEpisode) return;
 
     const rect = this.currentEpisode.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
@@ -122,49 +121,46 @@ class App {
     }
   }
 
-  setupTranscriptToggles() {
-    const transcriptButtons = document.querySelectorAll('.transcript-toggle');
-
-    transcriptButtons.forEach(button => {
-      button.addEventListener('click', (event) => {
-        this.handleTranscriptToggle(event.target);
-      });
-    });
+  initTranscriptToggles() {
+    document.querySelectorAll('.transcript-toggle').forEach(btn =>
+      btn.addEventListener('click', () => this.handleTranscriptToggle(btn))
+    );
   }
 
   async handleTranscriptToggle(button) {
     try {
-      const index = parseInt(button.getAttribute('data-index'));
-      const transcriptUrl = button.getAttribute('data-transcript-url');
+      const index = Number(button.dataset.index);
+
+      const currentEpisodeIndex = this.currentEpisode?.querySelector('.transcript-toggle')?.dataset.index;
+      const isCurrent = currentEpisodeIndex && index === Number(currentEpisodeIndex);
+      const transcriptUrl = button.dataset.transcriptUrl;
       const transcriptDiv = document.getElementById(`transcript-${index}`);
       const player = this.players.get(index);
 
       if (!transcriptDiv.hasChildNodes()) {
-        const transcriptData = await ApiService.fetchTranscript(transcriptUrl, this.sasToken);
-        const transcriptRenderer = new TranscriptRenderer(transcriptDiv, player);
-        transcriptRenderer.render(transcriptData);
-        player.setTranscriptRenderer(transcriptRenderer);
+        const data = await ApiService.fetchTranscript(transcriptUrl, this.sasToken);
+        const renderer = new TranscriptRenderer(transcriptDiv, player);
+        renderer.render(data);
+        player.setTranscriptRenderer(renderer);
       }
 
-      const transcriptRenderer = player.transcriptRenderer;
-      const isVisible = transcriptRenderer.toggle();
+      const isVisible = player.transcriptRenderer.toggle();
       button.textContent = isVisible ? 'Hide Transcript' : 'Show Transcript';
-      document.body.style.overflow = isVisible ? 'hidden' : 'auto';
+      document.body.style.overflow = isCurrent && isVisible ? 'hidden' : 'auto';
     } catch (error) {
       console.error('Error loading transcript:', error);
       button.textContent = 'Error loading transcript';
     }
   }
 
-  handleError(error) {
+  displayError(error) {
     console.error('Application error:', error);
     const container = document.getElementById('episodes');
-    container.textContent = 'An error occurred while loading episodes. Please try again later.';
+    if (container) {
+      container.textContent = 'An error occurred while loading episodes. Please try again later.';
+    }
   }
 }
 
-// Initialize the application when the DOM is loaded
-window.addEventListener('load', () => {
-  const app = new App();
-  app.init();
-});
+// App initialization
+window.addEventListener('load', () => new App().init());
