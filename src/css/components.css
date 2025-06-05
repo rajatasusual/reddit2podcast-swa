@@ -3,7 +3,6 @@
 /* Episode Card */
 .episode-card {
   scroll-snap-align: start;
-  padding: 1rem;
   transition: all 0.3s ease;
 }
 

@@ -1,8 +1,5 @@
 /* Focus states for accessibility */
 a:focus,
-button:focus,
-.transcript-toggle:focus,
-.play-pause-btn:focus,
 .sentence:focus {
   outline: 2px solid var(--secondary-color);
   outline-offset: 2px;
