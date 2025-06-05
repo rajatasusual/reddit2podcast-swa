@@ -4,13 +4,17 @@
   },
   "routes": [
     {
-      "route": "/*",
+      "route": "/index.html",
       "allowedRoles": [ "authenticated" ]
+    },
+    {
+      "route": "/login.html",
+      "allowedRoles": [ "anonymous" ]
     }
   ],
   "responseOverrides": {
     "401": {
-      "statusCode": 302,
+      "statusCode": 200,
       "redirect": "/login.html"
     }
   }
