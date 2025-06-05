@@ -16,18 +16,16 @@ export class ApiService {
     try {
       const userAuth = await this.fetchUserAuth();
       const url = `${CONFIG.FUNCTION_URL}/api/episodes${episode ? `?episode=${episode}` : ''}`;
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userAuth)
+      const headers = { 'Content-Type': 'application/json' };
+      const body = JSON.stringify(userAuth);
+      const method = 'POST';
+
+      return await fetchWithProgress({
+        headers,
+        body,
+        url,
+        method
       });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      return await response.json();
     } catch (error) {
       console.error('Failed to fetch episodes:', error);
       throw error;
@@ -47,3 +45,58 @@ export class ApiService {
     }
   }
 }
+
+async function fetchWithProgress(request) {
+  const response = await fetch(request.url, {
+    method: request.method,
+    headers: request.headers,
+    body: request.body
+  });
+
+  const progressElement = document.getElementById('progress');
+  let loaded = 0;
+  let total = null;
+
+  const contentLength = response.headers.get('content-length');
+  if (contentLength) {
+    total = parseInt(contentLength, 10);
+    progressElement.classList.remove('indeterminate');
+  } else {
+    progressElement.classList.add('indeterminate');
+  }
+
+  const reader = response.body.getReader();
+  const chunks = [];
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    loaded += value.length;
+
+    if (total) {
+      const percent = ((loaded / total) * 100).toFixed(2);
+      progressElement.style.width = `${percent}%`;
+    } else {
+      const currentWidth = parseFloat(progressElement.style.width) || 0;
+      const newWidth = Math.min(currentWidth + 2, 98);
+      progressElement.style.width = `${newWidth}%`;
+    }
+  }
+
+  progressElement.classList.remove('indeterminate');
+  progressElement.style.width = '100%';
+
+  // Combine chunks into a single Uint8Array
+  let allChunks = new Uint8Array(loaded);
+  let position = 0;
+  for (let chunk of chunks) {
+    allChunks.set(chunk, position);
+    position += chunk.length;
+  }
+
+  // Decode to string and parse JSON
+  const text = new TextDecoder("utf-8").decode(allChunks);
+  return JSON.parse(text);
+}
+

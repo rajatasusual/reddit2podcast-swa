@@ -14,6 +14,9 @@ export class TranscriptManager {
 
   async handleTranscriptToggle(button) {
     try {
+      button.blur();
+      button.classList.add('loading');
+      button.textContent = 'Loading...';
       const index = Number(button.dataset.index);
 
       const transcriptUrl = button.dataset.transcriptUrl;
@@ -32,6 +35,7 @@ export class TranscriptManager {
 
       this.bodyScrollHandler();
 
+      button.classList.remove('loading');
     } catch (error) {
       console.error('Error loading transcript:', error);
       button.textContent = 'Error loading transcript';
