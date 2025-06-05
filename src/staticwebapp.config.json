@@ -1,17 +1,18 @@
 {
   "navigationFallback": {
-    "rewrite": "/index.html"
+    "rewrite": "/index.html",
+    "exclude": ["/login.html", "/api/*", "/.auth/*"]
   },
   "routes": [
     {
       "route": "/*",
-      "allowedRoles": [ "authenticated" ]
-    }
-  ],
-  "responseOverrides": {
-    "401": {
+      "allowedRoles": ["authenticated"],
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/*",
       "statusCode": 302,
-      "redirect": "/.auth/login/aad"
+      "redirect": "/login.html"
     }
-  }
+  ]
 }

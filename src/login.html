@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reddit2Podcast</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .login-box {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      color: #333333;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      color: #666666;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    li {
+      flex: 1;
+    }
+
+    a {
+      text-decoration: none;
+      color: #ffffff;
+      display: block;
+      padding: 1rem;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      text-align: center;
+    }
+
+    a.github {
+      background-color: #333333;
+    }
+
+    a.github:hover {
+      background-color: #24292e;
+      color: #ffffff;
+    }
+
+    a.microsoft {
+      background-color: #0078d4;
+    }
+
+    a.microsoft:hover {
+      background-color: #005a9e;
+      color: #ffffff;
+    }
+
+    .icon {
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-box">
+    <h1>Reddit2<span style="color: #df7164;">Podcast</span></h1>
+    <p><a id="rss-link" target="_blank">RSS Feed</a></p>
+    <p>Please sign in with one of the following providers:</p>
+    <ul>
+      <li><a href="/.auth/login/github" class="github"><img src="assets/github-icon.svg" alt="Github" class="icon">Github</a></li>
+      <li><a href="/.auth/login/aad" class="microsoft"><img src="assets/microsoft-icon.svg" alt="Microsoft" class="icon">Microsoft</a></li>
+    </ul>
+  </div>
+</body>
+
+</html>
+
