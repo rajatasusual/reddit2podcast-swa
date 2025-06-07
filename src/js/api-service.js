@@ -12,10 +12,10 @@ export class ApiService {
     }
   }
 
-  static async fetchEpisodes(episode = null) {
+  static async fetchEpisodes(subreddit = null) {
     try {
       const userAuth = await this.fetchUserAuth();
-      const url = `${CONFIG.FUNCTION_URL}/api/episodes${episode ? `?episode=${episode}` : ''}`;
+      const url = `${CONFIG.FUNCTION_URL}/api/episodes${subreddit ? `?subreddit=${subreddit}` : ''}`;
       const headers = { 'Content-Type': 'application/json' };
       const body = JSON.stringify(userAuth);
       const method = 'POST';

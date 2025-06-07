@@ -31,8 +31,8 @@ export class App {
 
   async loadEpisodes() {
     const urlParams = new URLSearchParams(window.location.search);
-    const episode = urlParams.get('episode');
-    const { episodes = [], sasToken } = await ApiService.fetchEpisodes(episode);
+    const subreddit = urlParams.get('subreddit');
+    const { episodes = [], sasToken } = await ApiService.fetchEpisodes(subreddit);
     this.episodes = episodes;
     this.sasToken = sasToken;
   }

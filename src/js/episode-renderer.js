@@ -5,24 +5,32 @@ export class EpisodeRenderer {
         this.renderTranscriptSection(index, episode.transcriptsUrl) : '';
 
       return `
-        <div class="episode-wrapper">
-          <div class="episode-card">
-            <h2>${episode.date}</h2>
-            <div class="meta">
-              Subreddit: <i>${episode.subreddit}</i> |
-              Created: ${new Date(episode.createdOn).toDateString()}
-            </div>
-            <div
-              class="audio-player-container"
-              data-audio-url="${episode.audioUrl}"
-              data-sas="${sasToken}"
-            >
-              <p class="summary">${episode.summary}</p>
-            </div>
-          </div>
-          ${transcriptSection} 
-        </div>
-      `;
+  <div class="episode-wrapper">
+    <div class="episode-card">
+      <h2>${episode.title}</h2>
+      <div class="meta">
+        <a 
+          href="?subreddit=${encodeURIComponent(episode.subreddit)}" 
+          class="subreddit-tag"
+          title="Show episodes from r/${episode.subreddit}"
+        >
+          r/${episode.subreddit}
+        </a>
+        &nbsp;|
+         <i>${new Date(episode.createdOn).toDateString()}</i>
+      </div>
+      <div
+        class="audio-player-container"
+        data-audio-url="${episode.audioUrl}"
+        data-sas="${sasToken}"
+      >
+        <p class="summary">${episode.summary}</p>
+      </div>
+    </div>
+    ${transcriptSection} 
+  </div>
+`;
+
     }).join('');
   }
 
