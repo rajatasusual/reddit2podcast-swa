@@ -72,20 +72,22 @@ export class App {
 
     if (this.currentEpisode) {
       this.currentEpisode.classList.remove('current-episode');
-      this.toggleSummary(this.currentEpisode, true);
+      this.toggleCurrentPlayer(this.currentEpisode, true);
     }
 
     episodeWrapper.classList.add('current-episode');
-    this.toggleSummary(episodeWrapper, false);
+    this.toggleCurrentPlayer(episodeWrapper, false);
     this.currentEpisode = episodeWrapper;
     episodeWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     this.transcriptManager.bodyScrollHandler();
   }
 
-  toggleSummary(wrapper, show) {
+  toggleCurrentPlayer(wrapper, show) {
     const summary = wrapper.querySelector('.summary');
     if (summary) summary.style.display = show ? 'block' : 'none';
+    const meta = wrapper.querySelector('.meta');
+    if (meta) meta.style.display = show ? 'flex' : 'none';
   }
 }
 

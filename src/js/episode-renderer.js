@@ -16,7 +16,6 @@ export class EpisodeRenderer {
         >
           r/${episode.subreddit}
         </a>
-        &nbsp;|
          <i>${new Date(episode.createdOn).toDateString()}</i>
       </div>
       <div
