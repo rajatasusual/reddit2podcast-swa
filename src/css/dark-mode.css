@@ -1,15 +1,14 @@
 @import url('./variables.css');
 
-/* Dark mode starter */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary-color: #B098A4;
-    --secondary-color: #df7164;
-    --text-color: #E5EBEA;
-    --emphasis-text-color: #F0EDEE;
-    --background-color: #232323;
-    --border-color: #333;
-    --highlight-color: rgba(80, 80, 80, 0.85);
-    --shadow-color: rgba(0,0,0,0.25);
+    --neu-bg: #31363F;
+    --neu-accent: #e88478;
+    --neu-accent-light: #f0a39a;
+    --neu-text-primary: #adb5bd;
+    --neu-text-emphasis: #f8f9fa;
+    --neu-light-shadow: #424851;
+    --neu-dark-shadow: #25282c;
+
   }
 }

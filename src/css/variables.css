@@ -1,10 +1,20 @@
 :root {
-  --primary-color: #B098A4;
-  --secondary-color: #df7164;
-  --text-color: #747572;
-  --emphasis-text-color: #45503B;
-  --background-color: #E5EBEA;
-  --border-color: #DBD9DB;
-  --highlight-color: rgba(250, 249, 246, 0.5);
-  --shadow-color: rgba(0, 0, 0, 0.07);
+  /* The foundational color for our UI. */
+  --neu-bg: #E5EBEA;
+
+  /* The primary accent color for active states, highlights, and calls to action. */
+  --neu-accent: #df7164;
+  --neu-accent-light: #e68d83;
+
+  /* Text colors for readability. */
+  --neu-text-primary: #747572;
+  --neu-text-emphasis: #4a5441;
+
+  /* Shadow colors are derived from the background for a realistic effect. */
+  --neu-light-shadow: #ffffff; /* Lighter tint of the background */
+  --neu-dark-shadow: #c8cdcc;  /* Darker shade of the background */
+
+  /* Standardized values for consistency */
+  --neu-border-radius: 12px;
+  --neu-transition: all 0.2s ease-in-out;
 }

@@ -47,13 +47,14 @@ export class ApiService {
 }
 
 async function fetchWithProgress(request) {
+  const progressElement = document.getElementById('progress');
+  progressElement.classList.add('indeterminate');
   const response = await fetch(request.url, {
     method: request.method,
     headers: request.headers,
     body: request.body
   });
 
-  const progressElement = document.getElementById('progress');
   let loaded = 0;
   let total = null;
 
@@ -61,10 +62,8 @@ async function fetchWithProgress(request) {
   if (contentLength) {
     total = parseInt(contentLength, 10);
     progressElement.classList.remove('indeterminate');
-  } else {
-    progressElement.classList.add('indeterminate');
   }
-
+  
   const reader = response.body.getReader();
   const chunks = [];
 

@@ -2,17 +2,17 @@
 
 /* Transcript Styles */
 .transcript {
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  padding: 0.75rem 1rem;
-  border-left: 2px solid var(--primary-color);
-  border-radius: 6px;
-  background: var(--background-color);
-  box-shadow: 0 2px 4px var(--shadow-color);
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: var(--neu-bg);
+  box-shadow: inset 4px 4px 8px var(--neu-dark-shadow),
+              inset -4px -4px 8px var(--neu-light-shadow);
   white-space: normal;
-  color: var(--text-color);
-  max-height: calc(100vh - 320px); 
+  color: var(--neu-text-primary);
+  max-height: calc(100vh - 350px);
   overflow-y: auto;
   overscroll-behavior: contain;
   transition: max-height 0.3s, opacity 0.3s, visibility 0.3s;
@@ -23,9 +23,16 @@
 }
 
 .transcript::-webkit-scrollbar {
-  width: 0px;
+  width: 8px;
+}
+.transcript::-webkit-scrollbar-thumb {
+  background-color: var(--neu-text-primary);
+  border-radius: 4px;
+}
+.transcript::-webkit-scrollbar-track {
   background: transparent;
 }
+
 
 .transcript.visible {
   display: block !important;
@@ -34,41 +41,52 @@
 }
 
 .transcript-toggle {
-  background: transparent;
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
+  background: var(--neu-bg);
+  border: none;
+  color: var(--neu-accent);
   font-size: 0.85rem;
-  border-radius: 4px;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--neu-border-radius);
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: var(--neu-transition);
   display: inline-block;
+  box-shadow: 4px 4px 8px var(--neu-dark-shadow),
+              -4px -4px 8px var(--neu-light-shadow);
+}
+
+.transcript-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.transcript-toggle:focus,
+.transcript-toggle.loading {
+  outline: none;
+  box-shadow: inset 3px 3px 6px var(--neu-dark-shadow),
+              inset -3px -3px 6px var(--neu-light-shadow);
+  color: var(--neu-accent-light);
+  transform: translateY(0);
 }
 
 .transcript-toggle.loading {
-  background: var(--primary-color);
-  color: var(--background-color);
   cursor: not-allowed;
-}
-
-.transcript-toggle:hover,
-.transcript-toggle:focus {
-  background-color: var(--secondary-color);
-  color: var(--background-color);
-  outline: none;
 }
 
 .sentence {
   cursor: pointer;
-  color: var(--emphasis-text-color);
-  transition: background 0.1s;
+  padding: 0.2rem 0.5rem;
+  margin: 0 -0.5rem;
+  border-radius: 6px;
+  color: var(--neu-text-emphasis);
+  transition: var(--neu-transition);
 }
 
 .sentence:hover {
-  background: var(--text-color);
-  color: var(--background-color);
+  background: none;
+  color: var(--neu-accent);
 }
 
 .sentence.active {
-  background-color: var(--secondary-color);
-  color: var(--background-color);
+  background-color: var(--neu-accent-light);
+  color: #fff;
 }
