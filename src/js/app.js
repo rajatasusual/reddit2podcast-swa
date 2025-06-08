@@ -8,6 +8,7 @@ import { ErrorDisplay } from './error-display.js';
 
 export class App {
   constructor() {
+    this.subreddit = null;
     this.episodes = [];
     this.sasToken = '';
     this.players = new Map();
@@ -29,12 +30,30 @@ export class App {
     }
   }
 
+  showSubreddit(subreddit) {
+    const subredditDisplay = document.getElementById('subreddit-display');
+    subredditDisplay.innerHTML = `
+      <span class="subreddit-name">r/${subreddit}</span>
+    `;
+
+    subredditDisplay.style.display = 'block';
+    setTimeout(() => {
+      subredditDisplay.classList.add('visible');
+    }, 10);
+  }
+
   async loadEpisodes() {
     const urlParams = new URLSearchParams(window.location.search);
     const subreddit = urlParams.get('subreddit');
+
+    if (subreddit) {
+      this.showSubreddit(subreddit);
+    }
+
     const { episodes = [], sasToken } = await ApiService.fetchEpisodes(subreddit);
     this.episodes = episodes;
     this.sasToken = sasToken;
+    this.subreddit = subreddit;
   }
 
   setRSSLink() {
@@ -49,7 +68,7 @@ export class App {
     if (!container) return;
 
     container.innerHTML = this.episodes.length
-      ? EpisodeRenderer.renderEpisodes(this.episodes, this.sasToken)
+      ? EpisodeRenderer.renderEpisodes(this.episodes, this.sasToken, this.subreddit)
       : 'No episodes found.';
   }
 

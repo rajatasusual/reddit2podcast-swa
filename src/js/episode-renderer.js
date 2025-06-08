@@ -1,5 +1,5 @@
 export class EpisodeRenderer {
-  static renderEpisodes(episodes, sasToken) {
+  static renderEpisodes(episodes, sasToken, subreddit = null) {
     return episodes.map((episode, index) => {
       const transcriptSection = episode.transcriptsUrl ?
         this.renderTranscriptSection(index, episode.transcriptsUrl) : '';
@@ -9,13 +9,13 @@ export class EpisodeRenderer {
     <div class="episode-card">
       <h2>${episode.title}</h2>
       <div class="meta">
-        <a 
+        ${subreddit == null ?`<a 
           href="?subreddit=${encodeURIComponent(episode.subreddit)}" 
           class="subreddit-tag"
           title="Show episodes from r/${episode.subreddit}"
         >
           r/${episode.subreddit}
-        </a>
+        </a>` : ''}
          <i>${new Date(episode.createdOn).toDateString()}</i>
       </div>
       <div
