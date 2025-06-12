@@ -16,6 +16,10 @@
     "401": {
       "statusCode": 200,
       "redirect": "/login.html"
+    },
+    "400": {
+      "statusCode": 200,
+      "redirect": "/login.html"
     }
   }
 }

@@ -4,10 +4,18 @@ export class ApiService {
   static async fetchUserAuth() {
     try {
       const response = await fetch('/.auth/me');
+      if (!response.ok) {
+        throw new Error('Authentication required');
+      }
       const data = await response.json();
+      if (!data.clientPrincipal) {
+        throw new Error('No authenticated user found');
+      }
       return data.clientPrincipal;
     } catch (error) {
       console.error('Failed to fetch user authentication:', error);
+      // Redirect to login page
+      window.location.href = '/login.html';
       return null;
     }
   }
