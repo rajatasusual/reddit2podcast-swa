@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Query Search Interface</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="container">
+		<div class="search-interface">
+			<div class="search-header">
+				<h1>Query Search</h1>
+				<button type="button" class="btn btn--outline help-button" id="helpButton" aria-label="Show syntax help">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+						stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="10"></circle>
+						<line x1="9.09" y1="9" x2="9.09" y2="9.5"></line>
+						<line x1="15" y1="9" x2="15" y2="15"></line>
+						<line x1="9" y1="15" x2="15" y2="15"></line>
+					</svg>
+					Help
+				</button>
+			</div>
+
+			<div class="search-form">
+				<div class="search-input-wrapper">
+					<textarea id="queryInput" placeholder="Enter your search query..."></textarea>
+				</div>
+
+				<div class="search-actions">
+					<button type="button" class="btn btn--primary search-button" id="searchButton">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+							stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="11" cy="11" r="8"></circle>
+							<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+						</svg>
+						Search
+					</button>
+				</div>
+
+				<div class="error-message" id="errorMessage" style="display: none;"></div>
+			</div>
+
+			<div class="results-container" id="resultsContainer" style="display: none;">
+				<div class="results-header">
+					<h3>Search Results</h3>
+				</div>
+				<div class="results-content" id="resultsContent"></div>
+			</div>
+
+			<div class="loading-indicator" id="loadingIndicator" style="display: none;">
+				<div class="spinner"></div>
+				<span>Searching...</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- Help Modal -->
+	<div class="modal-overlay" id="helpModal" style="display: none;">
+		<div class="modal">
+			<div class="modal-header">
+				<h2>Query Syntax Help</h2>
+				<button type="button" class="modal-close" id="closeHelp" aria-label="Close help">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+						stroke-linecap="round" stroke-linejoin="round">
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+			</div>
+
+			<div class="modal-content">
+				<section class="help-section">
+					<h3>Boolean Operators</h3>
+					<div class="help-grid">
+						<div class="help-item">
+							<code class="syntax-code">AND</code>
+							<p>Both conditions must be true (can be implicit)</p>
+							<div class="example">Example: <code>Microsoft AND Tesla</code></div>
+						</div>
+						<div class="help-item">
+							<code class="syntax-code">OR</code>
+							<p>Either condition can be true</p>
+							<div class="example">Example: <code>Microsoft OR Tesla</code></div>
+						</div>
+						<div class="help-item">
+							<code class="syntax-code">NOT</code>
+							<p>Exclude the following condition</p>
+							<div class="example">Example: <code>Microsoft NOT Russia</code></div>
+						</div>
+						<div class="help-item">
+							<code class="syntax-code">()</code>
+							<p>Group conditions to control precedence</p>
+							<div class="example">Example: <code>(Microsoft AND Tesla) OR IBM</code></div>
+						</div>
+					</div>
+				</section>
+
+				<section class="help-section">
+					<h3>Field Types</h3>
+					<div class="help-grid">
+						<div class="help-item">
+							<code class="syntax-code">category:</code>
+							<p>Entity category (Person, Organization, Location, etc.)</p>
+							<div class="example">Example: <code>category:Person</code></div>
+						</div>
+						<div class="help-item">
+							<code class="syntax-code">subCategory:</code>
+							<p>Entity subcategory for more specific filtering</p>
+							<div class="example">Example: <code>subCategory:Government</code></div>
+						</div>
+						<div class="help-item">
+							<code class="syntax-code">type:</code>
+							<p>Alias for category field</p>
+							<div class="example">Example: <code>type:Organization</code></div>
+						</div>
+					</div>
+				</section>
+
+				<section class="help-section">
+					<h3>Example Queries</h3>
+					<div class="examples-list">
+						<div class="example-item">
+							<code class="query-example">Microsoft AND Tesla</code>
+							<p>Find episodes containing both Microsoft and Tesla</p>
+						</div>
+						<div class="example-item">
+							<code class="query-example">(Microsoft AND Tesla) NOT Russia</code>
+							<p>Find episodes with Microsoft and Tesla but not Russia</p>
+						</div>
+						<div class="example-item">
+							<code class="query-example">category:Organization AND "United States"</code>
+							<p>Find episodes with organizations and United States</p>
+						</div>
+						<div class="example-item">
+							<code class="query-example">Tesla OR (type:Person AND location:California)</code>
+							<p>Find episodes with Tesla or people in California</p>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://unpkg.com/nearley@2.20.1/lib/nearley.js"></script>
+	<script src="https://unpkg.com/moo@0.5.1/moo.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+
+	<script src="app.js"></script>
+</body>
+
+</html>
