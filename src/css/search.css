@@ -9,6 +9,7 @@
   bottom: 20px;
   right: 20px;
   z-index: 1000;
+  color: var(--neu-accent);
 }
 
 #reset-filter {
@@ -16,6 +17,7 @@
   bottom: 20px;
   left: 20px;
   z-index: 1000;
+  color: var(--neu-accent);
 }
 
 /* Floating Buttons (Closed State) */
@@ -96,6 +98,7 @@ textarea {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  color: var(--neu-accent);
 }
 
 #search-btn {
@@ -113,7 +116,6 @@ textarea {
   cursor: not-allowed;
   text-align: center;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
-  color: var(--neu-text-primary);
   opacity: 0.6;
 }
 
@@ -133,12 +135,12 @@ textarea {
   font-size: 1.5rem;
   float: right;
   cursor: pointer;
-  color: var(--neu-accent);
   text-align: center;
   align-content: space-around;
 }
 
 #search-query {
+  color: var(--neu-text-primary);
   text-wrap: auto;
   word-wrap: break-word;
   word-break: break-all;

@@ -11,7 +11,7 @@ export class Search {
 		this.searchQuery = document.getElementById('search-query');
 		this.closeBtn = document.getElementById('close-btn');
 		this.resultsBtn = document.getElementById('results-btn');
-		
+
 		this.results = [];
 
 		this.lexer = this._initLexer();
@@ -68,6 +68,7 @@ export class Search {
 					setTimeout(() => {
 						this.resultsBtn.style.display = 'none';
 						this.resultsBtn.innerHTML = '';
+						this.floatingBtn.style.display = 'flex';
 					}, 3000);
 				} else {
 					this.results = result.episodes;

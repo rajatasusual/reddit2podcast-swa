@@ -43,7 +43,7 @@
 .transcript-toggle {
   background: var(--neu-bg);
   border: none;
-  color: var(--neu-accent);
+  color: var(--neu-text-primary);
   font-size: 0.85rem;
   font-weight: 600;
   padding: 0.6rem 1.2rem;
@@ -57,6 +57,7 @@
 
 .transcript-toggle:hover {
   transform: translateY(-1px);
+  color: var(--neu-accent);
 }
 
 .transcript-toggle:focus,
