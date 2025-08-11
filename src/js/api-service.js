@@ -40,6 +40,19 @@ export class ApiService {
     }
   }
 
+  static async searchEpisodes(query) {
+    try {
+      const url = `${CONFIG.FUNCTION_URL}/api/query?q=${query}`;
+      const method = 'GET';
+      const headers = { 'Content-Type': 'application/json' };
+      
+      return await fetchWithProgress({ url, method, headers });
+    } catch (error) {
+      console.error('Failed to search episodes:', error);
+      throw error;
+    }
+  }
+
   static async fetchTranscript(transcriptUrl, sasToken) {
     try {
       const response = await fetch(`${transcriptUrl}?${sasToken}`);

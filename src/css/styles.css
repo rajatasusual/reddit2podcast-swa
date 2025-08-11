@@ -1,6 +1,7 @@
 @import "./variables.css";
 @import "./base.css";
 @import "./components.css";
+@import "./search.css";
 @import "./layout.css";
 @import "./transcript.css";
 @import "./responsive.css";

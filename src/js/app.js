@@ -5,6 +5,7 @@ import { EpisodeRenderer } from './episode-renderer.js';
 import { StickyManager } from './sticky-manager.js';
 import { TranscriptManager } from './transcript-manager.js';
 import { ErrorDisplay } from './error-display.js';
+import { Search } from './search.js';
 
 export class App {
   constructor() {
@@ -15,6 +16,9 @@ export class App {
     this.currentEpisode = null;
     this.stickyManager = new StickyManager(this);
     this.transcriptManager = new TranscriptManager(this);
+    this.search = new Search();
+
+    this.resetBtn = document.getElementById('reset-filter-btn');
   }
 
   async init() {
@@ -25,9 +29,29 @@ export class App {
       this.initAudioPlayers();
       this.transcriptManager.initTranscriptToggles();
       window.addEventListener('scroll', this.stickyManager.throttledStickyHandler);
+      
     } catch (error) {
       ErrorDisplay.displayError(error);
     }
+  }
+
+  renderSearchResults() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.querySelector('main').style.filter = 'blur(5px)';
+
+    this.episodes = this.search.results;
+    this.renderEpisodes();
+    this.initAudioPlayers();
+    this.transcriptManager.initTranscriptToggles();
+
+    setTimeout(() => {
+      document.querySelector('main').style.filter = 'none';
+    }, 1000);
+
+    this.search.results = [];
+
+    this.search.resetSearch();
+    this.showSubreddit('Search Results');
   }
 
   showSubreddit(subreddit) {
@@ -37,12 +61,16 @@ export class App {
     `;
 
     subredditDisplay.style.display = 'block';
+    this.resetBtn.style.display = 'flex';
+
     setTimeout(() => {
       subredditDisplay.classList.add('visible');
     }, 10);
   }
 
   async loadEpisodes() {
+    this.resetBtn.style.display = 'none';
+
     const urlParams = new URLSearchParams(window.location.search);
     const subreddit = urlParams.get('subreddit');
 
@@ -111,4 +139,5 @@ export class App {
 }
 
 // App initialization
-window.addEventListener('load', () => new App().init());
+window.app = new App();
+window.addEventListener('load', () => app.init());
