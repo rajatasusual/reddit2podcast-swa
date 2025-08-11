@@ -40,12 +40,17 @@ header p {
   margin: 0;
 }
 
+#subheader {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 #subreddit-display {
   font-size: 0.9rem;
   font-weight: 500;
   font-style: italic;
   color: var(--neu-text-primary);
-  margin: -1.25rem 0 1.5rem 0;
   text-shadow: -1px -1px 2px var(--neu-dark-shadow),
     1px 1px 2px var(--neu-light-shadow);
   opacity: 0;
@@ -59,32 +64,6 @@ header p {
 #subreddit-display .subreddit-name {
   font-weight: 700;
   color: var(--neu-text-emphasis);
-}
-
-#rss-link {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  text-decoration: none;
-  font-weight: 600;
-  color: var(--neu-accent);
-  background: var(--neu-bg);
-  border-radius: var(--neu-border-radius);
-  transition: var(--neu-transition);
-  box-shadow: 5px 5px 10px var(--neu-dark-shadow),
-    -5px -5px 10px var(--neu-light-shadow);
-}
-
-#rss-link:hover {
-  transform: translateY(-2px);
-  /* Lift on hover */
-  box-shadow: 7px 7px 12px var(--neu-dark-shadow),
-    -7px -7px 12px var(--neu-light-shadow);
-}
-
-#rss-link:active {
-  transform: translateY(0);
-  box-shadow: inset 4px 4px 8px var(--neu-dark-shadow),
-    inset -4px -4px 8px var(--neu-light-shadow);
 }
 
 p {
