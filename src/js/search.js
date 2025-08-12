@@ -28,7 +28,7 @@ export class Search {
 
 		// Close panel
 		this.closeBtn.addEventListener('click', () => {
-			this.closePanel();
+			this.closePanel(true);
 		});
 
 		// Real-time highlighting inside textarea
@@ -90,11 +90,15 @@ export class Search {
 		this.searchPanel.classList.remove('hidden');
 		this.searchInput.focus();
 	}
-	closePanel() {
+	closePanel(showButton) {
 		this.searchPanel.classList.add('hidden');
 
 		this.searchInput.value = '';
 		this.searchQuery.innerHTML = 'Enter a query.';
+
+		if (showButton) {
+			this.floatingBtn.style.display = 'flex';
+		}
 	}
 
 	resetSearch() {
