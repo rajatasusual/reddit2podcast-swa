@@ -1,27 +1,15 @@
-#results {
-  margin: 15px;
-  width: 80vw;
-  animation: fadeIn 0.2s ease;
-}
-
-#floating-search {
+#floating-controls {
   position: fixed;
+  justify-items: right;
   bottom: 20px;
   right: 20px;
   z-index: 1000;
   color: var(--neu-accent);
 }
 
-#reset-filter {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 1000;
-  color: var(--neu-accent);
-}
-
 /* Floating Buttons (Closed State) */
-#floating-btn, #reset-filter-btn {
+.floating-control {
+  margin-top: 1rem;
   padding: 0.75rem;
   border-radius: 50%;
   width: 40px;
@@ -36,40 +24,29 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-#floating-btn:hover {
+.floating-control:hover {
   transform: scale(1.05);
 }
 
 #results-btn {
-  padding: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--neu-bg);
-  box-shadow: 5px 5px 10px var(--neu-dark-shadow),
-    -5px -5px 10px var(--neu-light-shadow);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: auto;
+  height: auto;
   border-radius: var(--neu-border-radius);
 }
 
 /* Search Panel */
-#search-panel {
+#control-panel {
   background: var(--neu-bg);
   border-radius: var(--neu-border-radius);
   box-shadow: 4px 4px 8px var(--neu-dark-shadow),
     -4px -4px 8px var(--neu-light-shadow);
   padding: 15px;
   width: 80vw;
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 10px;
   position: relative;
   animation: fadeIn 0.2s ease;
-}
-
-#search-panel.hidden {
-  display: none;
 }
 
 /* Highlighted Input Wrapper */
@@ -101,8 +78,9 @@ textarea {
   color: var(--neu-accent);
 }
 
-#search-btn {
+.panel-btn {
   padding: 0.75rem;
+  color: var(--neu-text-primary);
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -111,7 +89,7 @@ textarea {
   justify-content: center;
   background: var(--neu-bg);
   box-shadow: inset 4px 4px 8px var(--neu-dark-shadow),
-              inset -4px -4px 8px var(--neu-light-shadow);
+    inset -4px -4px 8px var(--neu-light-shadow);
   pointer-events: none;
   cursor: not-allowed;
   text-align: center;
@@ -119,13 +97,14 @@ textarea {
   opacity: 0.6;
 }
 
-#search-btn.active {
+.panel-btn.active {
   box-shadow: 0 0 8px var(--neu-accent);
+  color: var(--neu-accent);
   cursor: pointer;
   pointer-events: all;
 }
 
-#search-btn:hover {
+.panel-btn:hover {
   transform: translateY(-2px);
 }
 
@@ -139,7 +118,7 @@ textarea {
   align-content: space-around;
 }
 
-#search-query {
+.panel-input {
   color: var(--neu-text-primary);
   text-wrap: auto;
   word-wrap: break-word;

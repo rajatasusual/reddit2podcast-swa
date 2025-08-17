@@ -40,12 +40,34 @@ export class ApiService {
     }
   }
 
+  static async fetchDateRange() {
+    const dateRange = await fetch(`${CONFIG.FUNCTION_URL}/api/date-range`);
+    return await dateRange.json();
+  }
+
+  static async fetchSubreddits() {
+    const subreddits = await fetch(`${CONFIG.FUNCTION_URL}/api/subreddits`);
+    return subreddits.json();
+  }
+
+  static async fetchCategories() {
+    const categories = await fetch(`${CONFIG.FUNCTION_URL}/api/categories`);
+    return categories.json();
+  }
+
+  static async fetchSubCategories(categories) {
+    const q = encodeURIComponent(categories.join(','));
+    const subcategoriesMap = await fetch(`${CONFIG.FUNCTION_URL}/api/subcategories?q=${q}`);
+    return subcategoriesMap.json();
+  }
+
+
   static async searchEpisodes(query) {
     try {
       const url = `${CONFIG.FUNCTION_URL}/api/query?q=${query}`;
       const method = 'GET';
       const headers = { 'Content-Type': 'application/json' };
-      
+
       return await fetchWithProgress({ url, method, headers });
     } catch (error) {
       console.error('Failed to search episodes:', error);
@@ -84,7 +106,7 @@ async function fetchWithProgress(request) {
     total = parseInt(contentLength, 10);
     progressElement.classList.remove('indeterminate');
   }
-  
+
   const reader = response.body.getReader();
   const chunks = [];
 

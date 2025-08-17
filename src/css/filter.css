@@ -1,0 +1,339 @@
+
+/* Filter Panel Styles */
+#filter-panel {
+    padding: 20px;
+    position: relative;
+    animation: fadeIn 0.2s ease;
+}
+
+.filter-step {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-section label {
+    font-weight: 600;
+    color: var(--neu-text-primary);
+    margin-bottom: 5px;
+    margin-top: 8px;
+}
+
+/* Date Range Styles */
+.filter-date-range {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-date-range input[type="date"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 12px;
+    border-radius: var(--neu-border-radius);
+    background: var(--neu-bg);
+    color: var(--neu-text-primary);
+    border: none;
+    box-shadow: inset 4px 4px 8px var(--neu-dark-shadow),
+                inset -4px -4px 8px var(--neu-light-shadow);
+}
+
+.filter-date-quick {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-date-quick button {
+    padding: 8px 16px;
+    border-radius: var(--neu-border-radius);
+    background: var(--neu-bg);
+    color: var(--neu-text-primary);
+    border: none;
+    box-shadow: 4px 4px 8px var(--neu-dark-shadow),
+                -4px -4px 8px var(--neu-light-shadow);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.filter-date-quick button:hover {
+    box-shadow: 2px 2px 4px var(--neu-dark-shadow),
+                -2px -2px 4px var(--neu-light-shadow);
+}
+
+.filter-date-quick button:active {
+    box-shadow: inset 2px 2px 4px var(--neu-dark-shadow),
+                inset -2px -2px 4px var(--neu-light-shadow);
+}
+
+/* Tag Container Styles */
+.tag-container {
+    min-height: 60px;
+    padding: 12px;
+    border-radius: var(--neu-border-radius);
+    background: var(--neu-bg);
+    box-shadow: inset 4px 4px 8px var(--neu-dark-shadow),
+                inset -4px -4px 8px var(--neu-light-shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+    position: relative;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+.tag-container:hover {
+    box-shadow: inset 6px 6px 12px var(--neu-dark-shadow),
+                inset -6px -6px 12px var(--neu-light-shadow);
+}
+
+.tag-container:empty::before {
+    content: "Click to add...";
+    color: var(--neu-text-secondary);
+    font-style: italic;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Filter Tag Styles */
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--neu-bg);
+    color: var(--neu-text-primary);
+    border-radius: 20px;
+    box-shadow: 2px 2px 4px var(--neu-dark-shadow),
+                -2px -2px 4px var(--neu-light-shadow);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-tag:hover {
+    box-shadow: 1px 1px 2px var(--neu-dark-shadow),
+                -1px -1px 2px var(--neu-light-shadow);
+}
+
+.filter-tag .remove {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.filter-tag .remove:hover {
+    transform: scale(1.1);
+}
+
+/* Filter Navigation */
+.filter-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.filter-nav .panel-btn {
+    padding: 12px 24px;
+    border-radius: var(--neu-border-radius);
+    background: var(--neu-bg);
+    color: var(--neu-text-primary);
+    border: none;
+    box-shadow: 4px 4px 8px var(--neu-dark-shadow),
+                -4px -4px 8px var(--neu-light-shadow);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.filter-nav .panel-btn:not(:disabled) {
+    opacity: 1;
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.filter-nav .panel-btn:not(:disabled):hover {
+    box-shadow: 2px 2px 4px var(--neu-dark-shadow),
+                -2px -2px 4px var(--neu-light-shadow);
+    transform: translateY(-1px);
+}
+
+.filter-nav .panel-btn:not(:disabled):active {
+    box-shadow: inset 2px 2px 4px var(--neu-dark-shadow),
+                inset -2px -2px 4px var(--neu-light-shadow);
+    transform: translateY(0);
+}
+
+.filter-nav .panel-btn.active {
+    box-shadow: 0 0 8px var(--neu-accent);
+    color: var(--neu-accent);
+}
+
+/* Multiselect Modal Styles */
+.multiselect-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.multiselect-content {
+    background: var(--neu-bg);
+    border-radius: var(--neu-border-radius);
+    box-shadow: 8px 8px 16px var(--neu-dark-shadow),
+                -8px -8px 16px var(--neu-light-shadow);
+    padding: 20px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.multiselect-content h3 {
+    margin: 0 0 15px 0;
+    color: var(--neu-text-primary);
+    text-align: center;
+}
+
+.multiselect-options {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: var(--neu-border-radius);
+    box-shadow: inset 2px 2px 4px var(--neu-dark-shadow),
+                inset -2px -2px 4px var(--neu-light-shadow);
+}
+
+.multiselect-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.multiselect-option:hover {
+    background: var(--neu-light-shadow);
+}
+
+.multiselect-option input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.multiselect-option label {
+    margin: 0;
+    cursor: pointer;
+    color: var(--neu-text-primary);
+    flex: 1;
+}
+
+.multiselect-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.multiselect-actions button {
+    padding: 10px 20px;
+    border-radius: var(--neu-border-radius);
+    background: var(--neu-bg);
+    color: var(--neu-text-primary);
+    border: none;
+    box-shadow: 4px 4px 8px var(--neu-dark-shadow),
+                -4px -4px 8px var(--neu-light-shadow);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.multiselect-actions button:hover {
+    box-shadow: 2px 2px 4px var(--neu-dark-shadow),
+                -2px -2px 4px var(--neu-light-shadow);
+    transform: translateY(-1px);
+}
+
+.multiselect-actions button:active {
+    box-shadow: inset 2px 2px 4px var(--neu-dark-shadow),
+                inset -2px -2px 4px var(--neu-light-shadow);
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #filter-panel {
+        padding: 15px;
+    }
+    
+    .filter-date-range {
+        flex-direction: column;
+    }
+    
+    .filter-date-range input[type="date"] {
+        min-width: unset;
+    }
+    
+    .filter-nav {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .filter-nav .panel-btn {
+        width: 100%;
+    }
+    
+    .multiselect-content {
+        width: 95%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-date-quick {
+        flex-direction: column;
+    }
+    
+    .filter-date-quick button {
+        width: 100%;
+    }
+    
+    .tag-container {
+        min-height: 50px;
+    }
+    
+    .filter-tag {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+}

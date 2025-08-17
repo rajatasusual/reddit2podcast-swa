@@ -29,43 +29,112 @@
   </header>
   <main>
     <!-- Floating Search -->
-    <div id="floating-search">
-      <div id="search-panel" class="hidden">
-        <textarea id="search-input" placeholder="Examples:
+    <div id="floating-controls">
+      <div id="control-panel" style="display: none;">
+        <div id="search-panel" style="display: none;">
+          <textarea id="search-input" placeholder="Examples:
 1. category:&quot;Organization&quot; AND subCategory:Medical
 2. (category:Product OR category:Organization) AND NOT 'Google' 
 3. &quot;Exact Phrase&quot; AND category:Location"></textarea>
 
-        <pre id="search-query">Enter a query.</pre>
+          <pre id="search-query" class="panel-input">Enter a query.</pre>
+        </div>
+        <!-- Filter Panel -->
+        <div id="filter-panel" style="display: none;">
+          <!-- Step 1: Date Range and Subreddit -->
+          <div id="filter-step-1" class="filter-step">
+            <h3 style="margin: 0 0 20px 0; color: var(--neu-text-primary); text-align: center;">
+              Filter Options - Step 1 of 2
+            </h3>
+
+            <div class="filter-section">
+              <label>Date Range (Required)</label>
+              <div class="filter-date-range">
+                <input type="date" id="filter-date-start" required>
+                <input type="date" id="filter-date-end" required>
+              </div>
+              <div class="filter-date-quick">
+                <button data-range="week">This Week</button>
+                <button data-range="month">This Month</button>
+              </div>
+            </div>
+            <br>
+            <div class="filter-section">
+              <label>Subreddit (Required)</label>
+              <div id="subreddit-tags" class="tag-container"></div>
+              <select id="subreddit-select" multiple style="display: none;"></select>
+            </div>
+
+            <div class="filter-nav">
+              <div style="width: 50%;"></div> <!-- Spacer -->
+              <button id="filter-next-btn" class="panel-btn" disabled>Next</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Categories and Subcategories -->
+          <div id="filter-step-2" class="filter-step" style="display: none;">
+            <h3 style="margin: 0 0 20px 0; color: var(--neu-text-primary); text-align: center;">
+              Filter Options - Step 2 of 2
+            </h3>
+
+            <div class="filter-section">
+              <label>Categories (Required)</label>
+              <div id="category-tags" class="tag-container"></div>
+              <select id="category-select" multiple style="display: none;"></select>
+            </div>
+            <br>
+
+            <div class="filter-section">
+              <label>Subcategories (Optional)</label>
+              <div id="subcategory-tags" class="tag-container"></div>
+              <select id="subcategory-select" multiple style="display: none;"></select>
+            </div>
+
+            <div class="filter-nav">
+              <button id="filter-back-btn" class="panel-btn">Back</button>
+            </div>
+          </div>
+        </div>
 
         <div id="panel-buttons">
-          <div id="search-btn" title="Search">
+          <div id="search-btn" title="Search" class="panel-btn" style="display: none;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round" class="search-icon">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </div>
+          <div id="filter-apply-btn" class="panel-btn" style="display: none;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 4H20L14 12V16L10 18V12L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
           <div id="close-btn" title="Close">&times;</div>
         </div>
       </div>
-      <div id="floating-btn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-      </div>
-      <div id="results-btn" style="display: none;"></div>
-    </div>
-    <div id="reset-filter" onclick="window.location = window.location.origin + window.location.pathname;">
-      <div id="reset-filter-btn" style="display: none;">
+      <div id="reset-filter-btn" style="display: none;" class="floating-control" title="Reset Filter"
+        onclick="window.location = window.location.origin + window.location.pathname;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 4L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           <path d="M4 4H20L14 12V16L10 18V12L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" />
         </svg>
       </div>
+      <div id="filter-trigger-btn" class="floating-control" title="Filter">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4H20L14 12V16L10 18V12L4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div id="search-trigger-btn" class="floating-control" title="Search">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <div id="results-btn" style="display: none;" class="floating-control"></div>
     </div>
     <div id="episodes"></div>
   </main>

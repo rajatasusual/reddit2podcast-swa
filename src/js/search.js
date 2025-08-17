@@ -1,29 +1,45 @@
 // search.js
 
 import { ApiService } from './api-service.js';
+import { Filter } from './filter.js';
 
 export class Search {
 	constructor() {
-		this.floatingBtn = document.getElementById('floating-btn');
+		this.searchTriggerBtn = document.getElementById('search-trigger-btn');
+		this.filterTriggerBtn = document.getElementById('filter-trigger-btn');
+
+		this.controlPanel = document.getElementById('control-panel');
 		this.searchPanel = document.getElementById('search-panel');
+
 		this.searchBtn = document.getElementById('search-btn');
 		this.searchInput = document.getElementById('search-input');
 		this.searchQuery = document.getElementById('search-query');
+
+		this.filterApplyBtn = document.getElementById('filter-apply-btn');
+
 		this.closeBtn = document.getElementById('close-btn');
 		this.resultsBtn = document.getElementById('results-btn');
 
 		this.results = [];
 
+		this.filter = new Filter();
+
 		this.lexer = this._initLexer();
 		this.grammar = this._initGrammar();
+
+		this.handleSearchAndFilter = this.handleSearchAndFilter.bind(this);
 
 		this.bindEvents();
 	}
 
 	bindEvents() {
 		// Open panel
-		this.floatingBtn.addEventListener('click', () => {
-			this.openPanel();
+		this.searchTriggerBtn.addEventListener('click', () => {
+			this.openPanel(true);
+		});
+
+		this.filterTriggerBtn.addEventListener('click', () => {
+			this.openPanel(false);
 		});
 
 		// Close panel
@@ -55,49 +71,107 @@ export class Search {
 
 		// Search button click
 		this.searchBtn.addEventListener('click', async () => {
-			try {
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-				document.querySelector('main').style.filter = 'blur(5px)';
+			await this.handleSearchAndFilter(true);
+		});
 
-				const result = await this.performSearch();
+		// Apply filter
+		this.filterApplyBtn.addEventListener('click', async () => {
+			await this.handleSearchAndFilter(false);
+		});
 
-				const resultsLength = result.episodes.length;
-				if (resultsLength === 0) {
-					this.resultsBtn.innerHTML = `<span>No results found.</span>`;
-					this.resultsBtn.style.display = 'flex';
-					setTimeout(() => {
-						this.resultsBtn.style.display = 'none';
-						this.resultsBtn.innerHTML = '';
-						this.floatingBtn.style.display = 'flex';
-					}, 3000);
-				} else {
-					this.results = result.episodes;
-					this.resultsBtn.innerHTML = `<a href="#" onclick="app.renderSearchResults();"><span>${resultsLength} results found.</span></a>`;
-					this.resultsBtn.style.display = 'flex';
-					this.floatingBtn.style.display = 'none';
+		// Quick date range buttons
+		document.querySelectorAll('.filter-date-range-quick-select button').forEach(btn => {
+			btn.onclick = () => {
+				const today = new Date();
+				let startDate, endDate = today;
+
+				if (btn.dataset.filterDateRange === 'today') {
+					startDate = endDate;
+				}
+				else if (btn.dataset.filterDateRange === 'this-week') {
+					const day = today.getDay(); // Sunday = 0
+					startDate = new Date(today);
+					startDate.setDate(today.getDate() - day);
+				}
+				else if (btn.dataset.filterDateRange === 'this-month') {
+					startDate = new Date(today.getFullYear(), today.getMonth(), 1);
 				}
 
-				document.querySelector('main').style.filter = 'none';
-			} catch (error) {
-				console.error('Error searching:', error);
-			} finally {
-				this.closePanel();
-			}
+				// Format to yyyy-mm-dd
+				const fmt = d => d.toISOString().split('T')[0];
+				document.getElementById('filter-date-range-start').value = fmt(startDate);
+				document.getElementById('filter-date-range-end').value = fmt(endDate);
+			};
 		});
+
 	}
-	openPanel() {
-		this.floatingBtn.style.display = 'none';
-		this.searchPanel.classList.remove('hidden');
-		this.searchInput.focus();
+
+	async handleSearchAndFilter(isSearch) {
+		const search = this;
+		try {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			document.querySelector('main').style.filter = 'blur(5px)';
+
+			const result = isSearch ? await this.performSearch() : await this.applyFilter();
+
+			const resultsLength = result.episodes.length;
+			if (resultsLength === 0) {
+				search.resultsBtn.innerHTML = `<span>No results found.</span>`;
+				search.resultsBtn.style.display = 'flex';
+				setTimeout(() => {
+					search.resultsBtn.style.display = 'none';
+					search.resultsBtn.innerHTML = '';
+					search.searchTriggerBtn.style.display = 'flex';
+					search.filterTriggerBtn.style.display = 'flex';
+				}, 3000);
+			} else {
+				search.results = result.episodes;
+				search.resultsBtn.innerHTML = `<a href="#" onclick="app.renderSearchResults();"><span>${resultsLength} results found.</span></a>`;
+				search.resultsBtn.style.display = 'flex';
+				search.searchTriggerBtn.style.display = 'none';
+				search.filterTriggerBtn.style.display = 'none';
+			}
+
+			document.querySelector('main').style.filter = 'none';
+		} catch (error) {
+			console.error('Error searching:', error);
+		} finally {
+			search.closePanel();
+		}
 	}
+
+	async openPanel(isSearch) {
+		document.querySelector('#episodes').style.filter = 'blur(5px)';
+		this.controlPanel.style.display = 'flex';
+
+		if (isSearch) {
+			this.searchPanel.style.display = 'block';
+			this.searchBtn.style.display = 'flex';
+			this.searchInput.focus();
+		} else {
+			this.filter.startFiltering();
+		}
+
+		this.searchTriggerBtn.style.display = 'none';
+		this.filterTriggerBtn.style.display = 'none';
+	}
+
 	closePanel(showButton) {
-		this.searchPanel.classList.add('hidden');
+
+		document.querySelector('#episodes').style.filter = 'none';
+
+		this.controlPanel.style.display = 'none';
+		this.searchPanel.style.display = 'none';
+
+		this.searchBtn.style.display = 'none';
 
 		this.searchInput.value = '';
 		this.searchQuery.innerHTML = 'Enter a query.';
 
 		if (showButton) {
-			this.floatingBtn.style.display = 'flex';
+			this.searchTriggerBtn.style.display = 'flex';
+			this.filterTriggerBtn.style.display = 'flex';
+			this.filter.closeFilter();
 		}
 	}
 
@@ -105,12 +179,23 @@ export class Search {
 		this.resultsBtn.style.display = 'none';
 		this.resultsBtn.innerHTML = '';
 
-		this.floatingBtn.style.display = 'flex';
+		this.searchTriggerBtn.style.display = 'flex';
+		this.filterTriggerBtn.style.display = 'flex';
 	}
 
 	async performSearch() {
 		const query = this.searchInput.value.trim();
 		return await ApiService.searchEpisodes(query);
+	}
+
+	async applyFilter() {
+		try {
+			const query = this.filter.createQuery();
+			return await ApiService.searchEpisodes(query);
+
+		} catch (error) {
+			console.error('Error applying filter:', error);
+		}
 	}
 
 	_initLexer() {
